@@ -11,11 +11,13 @@ import { BentoFeatures } from './components/sections/BentoFeatures';
 import { LoadingScreen } from './components/ui/LoadingScreen';
 import { CursorGlow } from './components/ui/CursorGlow';
 import { motion } from 'motion/react';
+import { AuthProvider } from './context/AuthContext';
 
 export default function App() {
   return (
-    <SmoothScroll>
-      <div className="relative bg-[#050505] min-h-screen">
+    <AuthProvider>
+      <SmoothScroll>
+        <div className="relative bg-[#050505] min-h-screen">
         {/* Background Aurora Lighting Effects */}
         <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/10 rounded-full blur-[120px] pointer-events-none" />
@@ -96,5 +98,6 @@ export default function App() {
         </footer>
       </div>
     </SmoothScroll>
+    </AuthProvider>
   );
 }

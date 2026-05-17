@@ -1,10 +1,13 @@
 import { motion } from 'motion/react';
-import { Menu, Search, User } from 'lucide-react';
+import { Menu, Search, User, LogOut } from 'lucide-react';
 import { cn } from '@/src/lib/utils';
 import { useState, useEffect } from 'react';
+import { useAuth } from '@/src/context/AuthContext';
+import { loginWithGoogle, logout } from '@/src/lib/firebase';
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const { user, username, loading } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -45,12 +48,43 @@ export function Navbar() {
       </div>
 
       <div className="flex items-center gap-4">
-        <button className="px-5 py-2 text-sm font-medium border border-white/10 rounded-full bg-white/5 backdrop-blur-md hover:bg-white/10 transition-all">
-          Sign In
-        </button>
-        <button className="hidden md:flex px-5 py-2 text-sm font-medium bg-white text-black rounded-full hover:bg-white/90 transition-all">
-          Join Waitlist
-        </button>
+        {loading ? (
+          <div className="w-8 h-8 rounded-full bg-white/5 animate-pulse" />
+        ) : user ? (
+          <div className="flex items-center gap-4">
+            <div className="hidden md:flex flex-col items-end">
+              <span className="text-xs font-bold text-white">{username}</span>
+              <button 
+                onClick={logout}
+                className="text-[10px] text-white/40 hover:text-white transition-colors uppercase tracking-widest"
+              >
+                Sign Out
+              </button>
+            </div>
+            {user.photoURL ? (
+              <img src={user.photoURL} alt="Avatar" className="w-8 h-8 rounded-full border border-white/10" referrerPolicy="no-referrer" />
+            ) : (
+              <div className="w-8 h-8 rounded-full glass flex items-center justify-center">
+                <User size={16} />
+              </div>
+            )}
+          </div>
+        ) : (
+          <>
+            <button 
+              onClick={loginWithGoogle}
+              className="px-5 py-2 text-sm font-medium border border-white/10 rounded-full bg-white/5 backdrop-blur-md hover:bg-white/10 transition-all"
+            >
+              Sign In
+            </button>
+            <button 
+              onClick={loginWithGoogle}
+              className="hidden md:flex px-5 py-2 text-sm font-medium bg-white text-black rounded-full hover:bg-white/90 transition-all"
+            >
+              Join Waitlist
+            </button>
+          </>
+        )}
         <button className="md:hidden p-2 text-white/60 hover:text-white transition-colors">
           <Menu size={20} />
         </button>

@@ -1,0 +1,86 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "Public and private user information",
+      "type": "object",
+      "properties": {
+        "username": { "type": "string", "description": "Display name" },
+        "email": { "type": "string", "format": "email" },
+        "avatarUrl": { "type": "string" },
+        "bio": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["username", "email", "createdAt"]
+    },
+    "Prompt": {
+      "title": "AI Prompt",
+      "description": "An AI prompt shared on the platform",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "type": { "type": "string", "enum": ["Midjourney", "Stable Diffusion", "DALL-E 3", "Flux", "GPT"] },
+        "authorId": { "type": "string" },
+        "authorName": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "likesCount": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "content", "authorId", "createdAt"]
+    },
+    "Like": {
+      "title": "Prompt Like",
+      "description": "A user-prompt interaction",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "promptId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "SavedPrompt": {
+      "title": "Saved Prompt",
+      "description": "A prompt saved by a user",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "promptId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Collection": {
+      "title": "Collection",
+      "description": "A group of prompts curated by a user",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "userId": { "type": "string" },
+        "promptIds": { "type": "array", "items": { "type": "string" } },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Registered users"
+    },
+    "/prompts/{promptId}": {
+      "schema": "Prompt",
+      "description": "Public prompts"
+    },
+    "/likes/{likeId}": {
+      "schema": "Like",
+      "description": "One like per user per prompt"
+    },
+    "/saved_prompts/{saveId}": {
+      "schema": "SavedPrompt",
+      "description": "User saved library"
+    },
+    "/collections/{collectionId}": {
+      "schema": "Collection",
+      "description": "User curated galleries"
+    }
+  }
+}

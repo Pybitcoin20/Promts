@@ -2,8 +2,20 @@ import { motion } from 'motion/react';
 import { HeroCanvas } from '../canvas/HeroCanvas';
 import { MagneticButton } from '../ui/MagneticButton';
 import { ArrowRight, Sparkles } from 'lucide-react';
+import { useAuth } from '@/src/context/AuthContext';
+import { loginWithGoogle } from '@/src/lib/firebase';
 
 export function Hero() {
+  const { user } = useAuth();
+
+  const handleCTA = () => {
+    if (!user) {
+      loginWithGoogle();
+    } else {
+      document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
       <HeroCanvas />
@@ -134,14 +146,20 @@ export function Hero() {
           transition={{ duration: 0.8, delay: 0.7 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-6"
         >
-          <MagneticButton className="px-8 py-4 rounded-full bg-white text-black font-bold group overflow-hidden">
+          <MagneticButton 
+            onClick={handleCTA}
+            className="px-8 py-4 rounded-full bg-white text-black font-bold group overflow-hidden"
+          >
             <span className="flex items-center gap-2">
-              Start Building <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+              {user ? 'View Gallery' : 'Start Building'} <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </span>
             <div className="absolute inset-0 bg-brand-blue/10 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
           </MagneticButton>
           
-          <button className="px-8 py-4 rounded-full glass font-bold hover:bg-white/10 transition-all">
+          <button 
+            onClick={() => document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' })}
+            className="px-8 py-4 rounded-full glass font-bold hover:bg-white/10 transition-all"
+          >
             Browse Gallery
           </button>
         </motion.div>
