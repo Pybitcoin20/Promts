@@ -42,8 +42,9 @@ export default function App() {
           </motion.div>
         </main>
 
-        <footer className="py-20 px-6 md:px-12 border-t border-white/10 bg-black">
-          <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+        <footer className="py-20 px-6 md:px-12 border-t border-white/10 mesh-gradient relative overflow-hidden">
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-2xl" />
+          <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 relative z-10">
             <div className="md:col-span-2">
               <div className="flex items-center gap-2 mb-6">
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-blue to-brand-purple flex items-center justify-center">

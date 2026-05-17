@@ -1,4 +1,5 @@
-import { motion } from 'motion/react';
+import React from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
 import { cn } from '@/src/lib/utils';
 import { Heart, MessageSquare, Share2 } from 'lucide-react';
 
@@ -54,15 +55,48 @@ const PROMPTS = [
 ];
 
 function PromptCard({ prompt, index }: { prompt: typeof PROMPTS[0], index: number }) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseXSpring = useSpring(x);
+  const mouseYSpring = useSpring(y);
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+    x.set(xPct);
+    y.set(yPct);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.8, delay: index * 0.1 }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        rotateX,
+        rotateY,
+        transformStyle: "preserve-3d",
+      }}
       className="group relative rounded-2xl overflow-hidden glass border-white/5 hover:border-white/20 transition-all duration-500 mb-6"
     >
-      <div className="relative aspect-auto overflow-hidden">
+      <div className="relative aspect-auto overflow-hidden" style={{ transform: "translateZ(50px)" }}>
         <img
           src={prompt.image}
           alt={prompt.title}
@@ -78,11 +112,11 @@ function PromptCard({ prompt, index }: { prompt: typeof PROMPTS[0], index: numbe
         </div>
       </div>
 
-      <div className="p-6">
-        <h3 className="text-xl font-display font-semibold mb-1 group-hover:text-brand-blue transition-colors">
+      <div className="p-6" style={{ transform: "translateZ(30px)" }}>
+        <h3 className="text-xl font-sans font-semibold mb-1 group-hover:text-brand-blue transition-colors">
           {prompt.title}
         </h3>
-        <p className="text-sm text-white/40 mb-4">by @{prompt.author}</p>
+        <p className="text-sm text-white/40 mb-4 font-light">by @{prompt.author}</p>
         
         <div className="flex items-center justify-between border-t border-white/10 pt-4">
           <div className="flex items-center gap-4 text-white/40">
