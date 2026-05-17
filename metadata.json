@@ -1,0 +1,8 @@
+{
+  "name": "Aetherial AI",
+  "description": "A world-class futuristic AI prompt platform featuring immersive 3D scenes, cinematic motion design, and intelligent prompt discovery.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
